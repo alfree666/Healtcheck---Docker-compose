@@ -1,0 +1,50 @@
+Healthcheck con Docker 
+
+Docker tiene una funcionalidad llamada Healthcheck, esto permite saber si un contenedor esta healthy(Sano) o no, en pocas palabras si está vivo.
+
+
+HEALTHCHECK CMD curl --fail http://localhost:9000/guid/ || exit 1
+
+
+
+    healthcheck:
+      test: ["CMD", "/usr/bin/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+    healthcheck:
+      test: curl --fail -s http://localhost:8080/ || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 2
+
+    healthcheck:
+      test: curl --fail -s http://localhost:5000/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+
+
+version: "3.7"
+
+services:
+  app:
+    build:
+      context: .
+    depends_on:
+      - nginx
+    
+  nginx:
+    image: nginx:latest
+    ports:
+      - '80:80'
+    healthcheck:
+      test: curl --fail http://localhost || exit 1
+      interval: 10s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+
+
+

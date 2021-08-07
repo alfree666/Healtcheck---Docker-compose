@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+   node-healthcheck:
+    image: node-healthcheck
+    ports:
+      - '8080:8080'
+    healthcheck:
+      test: curl --fail -s http://localhost:8080/ || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 2
+
